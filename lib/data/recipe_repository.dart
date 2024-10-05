@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -52,26 +51,19 @@ class RecipeRepository {
     await _saveRecipes();
   }
 
-  static Future<io.File> get _recipeFile async {
-    throw UnimplementedError();
-  }
-
   static Future<List<Recipe>> _loadRecipes() async {
-    final recipeFile = await _recipeFile;
-
-    // seed empty recipe file w/ example recipes
-    final contents = await recipeFile.exists()
-        ? await recipeFile.readAsString()
-        : await rootBundle.loadString(_assetFileName);
+    // seed empty recipe file w/ example recipes if there's no existing content
+    // TODO: check if there is content in Firestore
+    final contents = await rootBundle.loadString(_assetFileName);
 
     final jsonList = json.decode(contents) as List;
     return jsonList.map((json) => Recipe.fromJson(json)).toList();
   }
 
   static Future<void> _saveRecipes() async {
-    final file = await _recipeFile;
-    final jsonString = json.encode(recipes.map((r) => r.toJson()).toList());
-    await file.writeAsString(jsonString);
+    // TODO: save recipes to Firestore
+    //final jsonString = json.encode(recipes.map((r) => r.toJson()).toList());
+    // await file.writeAsString(jsonString);
 
     // note: this is a hack to get the UI to update
     items.value = [];
