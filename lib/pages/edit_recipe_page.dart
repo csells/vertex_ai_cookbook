@@ -37,7 +37,9 @@ class _EditRecipePageState extends State<EditRecipePage> {
       model: "gemini-1.5-flash",
       generationConfig: GenerationConfig(
         responseMimeType: 'application/json',
-        // TODO
+        // TODO: add schema for validation, perhaps via functions
+        // - https://github.com/firebase/flutterfire/blob/master/packages/firebase_vertexai/firebase_vertexai/example/lib/main.dart#L99
+        // - https://github.com/firebase/flutterfire/blob/master/packages/firebase_vertexai/firebase_vertexai/example/lib/main.dart#L433
         // responseSchema: Schema(
         //   SchemaType.object,
         //   properties: {

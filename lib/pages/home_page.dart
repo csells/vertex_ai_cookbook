@@ -8,14 +8,14 @@ import '../views/recipe_list_view.dart';
 import '../views/recipe_response_view.dart';
 import '../views/search_box.dart';
 
-class ResponsiveHomePage extends StatefulWidget {
-  const ResponsiveHomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  _ResponsiveHomePageState createState() => _ResponsiveHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _ResponsiveHomePageState extends State<ResponsiveHomePage>
+class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   String _searchText = '';
 
