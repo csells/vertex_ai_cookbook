@@ -11,7 +11,6 @@ import 'pages/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await RecipeRepository.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(App());
 }
@@ -44,6 +43,5 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp.router(
         routerConfig: _router,
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(colorSchemeSeed: Colors.blue),
       );
 }

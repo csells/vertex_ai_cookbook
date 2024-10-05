@@ -55,37 +55,48 @@ output.
   );
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Recipes'),
-          actions: [
-            IconButton(
-              onPressed: _onAdd,
-              tooltip: 'Add Recipe',
-              icon: const Icon(Icons.add),
-            ),
-          ],
-        ),
-        body: _RowOrTabBar(
-          tabs: const [
-            Tab(text: 'Recipes'),
-            Tab(text: 'Chat'),
-          ],
-          children: [
-            Column(
-              children: [
-                SearchBox(onSearchChanged: _updateSearchText),
-                Expanded(child: RecipeListView(searchText: _searchText)),
-              ],
-            ),
-            LlmChatView(
-              provider: _provider,
-              responseBuilder: (context, response) =>
-                  RecipeResponseView(response),
-            ),
-          ],
+  Widget build(BuildContext context) => FutureBuilder<bool>(
+        future: _loadRecipes(),
+        builder: (context, snapshot) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Recipes'),
+            actions: [
+              IconButton(
+                onPressed: snapshot.hasData ? _onAdd : null,
+                tooltip: 'Add Recipe',
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          body: snapshot.hasData
+              ? _RowOrTabBar(
+                  tabs: const [
+                    Tab(text: 'Recipes'),
+                    Tab(text: 'Chat'),
+                  ],
+                  children: [
+                    Column(
+                      children: [
+                        SearchBox(onSearchChanged: _updateSearchText),
+                        Expanded(
+                            child: RecipeListView(searchText: _searchText)),
+                      ],
+                    ),
+                    LlmChatView(
+                      provider: _provider,
+                      responseBuilder: (context, response) =>
+                          RecipeResponseView(response),
+                    ),
+                  ],
+                )
+              : const Center(child: Text('Loading recipes...')),
         ),
       );
+
+  Future<bool> _loadRecipes() async {
+    await RecipeRepository.init();
+    return true;
+  }
 
   void _updateSearchText(String text) => setState(() => _searchText = text);
 

@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage>
 # Cloud Firestore
 TODO
 https://firebase.google.com/docs/firestore/quickstart#dart_3
+TODO: README/create-firestore-default-database.png
 
 # Auth
 TODO
