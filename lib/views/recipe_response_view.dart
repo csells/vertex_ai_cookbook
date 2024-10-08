@@ -11,32 +11,23 @@ import 'recipe_content_view.dart';
 class RecipeResponseView extends StatelessWidget {
   const RecipeResponseView(this.response, {super.key});
 
-  // TODO: replace this with JSON
-  static var re = RegExp(
-    '```json(?<recipe>.*?)```',
-    multiLine: true,
-    dotAll: true,
-  );
-
   final String response;
 
   @override
   Widget build(BuildContext context) {
-    // find all of the chunks of json that represent recipes
-    final matches = re.allMatches(response);
-
-    var end = 0;
+    final map = jsonDecode(response);
+    final recipesWithText = map['recipes'] as List<dynamic>;
+    final finalText = map['text'] as String;
     final children = <Widget>[];
-    for (final match in matches) {
-      // extract the text before the json
-      if (match.start > end) {
-        final text = response.substring(end, match.start);
-        children.add(MarkdownBody(data: text));
-      }
 
-      // extract the json
-      final json = match.namedGroup('recipe')!;
-      final recipe = Recipe.fromJson(jsonDecode(json));
+    for (final recipeWithText in recipesWithText) {
+      // extract the text before the recipe
+      final text = recipeWithText['text'] as String;
+      if (text.isNotEmpty) children.add(MarkdownBody(data: text));
+
+      // extract the recipe
+      final json = recipeWithText['recipe'] as Map<String, dynamic>;
+      final recipe = Recipe.fromJson(json);
       children.add(const Gap(16));
       children.add(Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,15 +45,10 @@ class RecipeResponseView extends StatelessWidget {
         child: const Text('Add Recipe'),
       ));
       children.add(const Gap(16));
-
-      // exclude the raw json output
-      end = match.end;
     }
 
     // add the remaining text
-    if (end < response.length) {
-      children.add(MarkdownBody(data: response.substring(end)));
-    }
+    if (finalText.isNotEmpty) children.add(MarkdownBody(data: finalText));
 
     // return the children as rows in a column
     return Column(

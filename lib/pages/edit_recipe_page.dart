@@ -41,7 +41,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
         '''
 You are a helpful assistant that generates recipes based on the ingredients and 
 instructions provided as well as my food preferences, which are as follows:
-${Settings.foodPreferences.isEmpty ? 'I do not eat meatush' : Settings.foodPreferences}
+${Settings.foodPreferences.isEmpty ? 'I don\'t have any food preferences' : Settings.foodPreferences}
 
 Generate a response in JSON format with the following schema:
 {

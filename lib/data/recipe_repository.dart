@@ -19,30 +19,30 @@ class RecipeRepository {
       FirebaseFirestore.instance.collection('recipes');
 
   static Future<void> init() async {
-    assert(_recipes == null, 'call init() only once');
+    assert(_recipes == null, 'call RecipeRepository.init() exactly once');
     await _loadRecipes();
   }
 
   static Iterable<Recipe> get recipes {
-    assert(_recipes != null, 'call init() first');
+    assert(_recipes != null, 'call RecipeRepository.init() exactly once');
     return _recipes!;
   }
 
   static Recipe getRecipe(String recipeId) {
-    assert(_recipes != null, 'call init() first');
+    assert(_recipes != null, 'call RecipeRepository.init() exactly once');
     if (recipeId == newRecipeID) return Recipe.empty(newRecipeID);
     return _recipes!.singleWhere((r) => r.id == recipeId);
   }
 
   static Future<void> addNewRecipe(Recipe newRecipe) async {
-    assert(_recipes != null, 'call init() first');
+    assert(_recipes != null, 'call RecipeRepository.init() exactly once');
     _recipes!.add(newRecipe);
     await _recipesCollection.doc(newRecipe.id).set(newRecipe.toJson());
     _notifyListeners();
   }
 
   static Future<void> updateRecipe(Recipe recipe) async {
-    assert(_recipes != null, 'call init() first');
+    assert(_recipes != null, 'call RecipeRepository.init() exactly once');
     final i = _recipes!.indexWhere((r) => r.id == recipe.id);
     assert(i >= 0);
     _recipes![i] = recipe;
@@ -51,7 +51,7 @@ class RecipeRepository {
   }
 
   static Future<void> deleteRecipe(Recipe recipe) async {
-    assert(_recipes != null, 'call init() first');
+    assert(_recipes != null, 'call RecipeRepository.init() exactly once');
     final removed = _recipes!.remove(recipe);
     assert(removed);
     await _recipesCollection.doc(recipe.id).delete();
