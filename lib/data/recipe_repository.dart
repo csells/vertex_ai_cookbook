@@ -9,13 +9,12 @@ import 'recipe_data.dart';
 
 class RecipeRepository {
   static const newRecipeID = '__NEW_RECIPE__';
-
-  // TODO: ensure these are recipes unencumbered by copyright
   static const _assetFileName = 'assets/recipes_default.json';
 
   static List<Recipe>? _recipes;
   static final items = ValueNotifier<Iterable<Recipe>>([]);
 
+  // TODO: only access recipes from the currently logged in user
   static get _recipesCollection =>
       FirebaseFirestore.instance.collection('recipes');
 

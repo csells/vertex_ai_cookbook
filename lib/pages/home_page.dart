@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   String _searchText = '';
+  Future<bool>? _initRecipesFuture;
 
   final _provider = VertexProvider(
     // TODO: integrate RAG into the sample
@@ -55,8 +56,14 @@ output.
   );
 
   @override
+  void initState() {
+    super.initState();
+    _initRecipesFuture = RecipeRepository.init().then((_) => true);
+  }
+
+  @override
   Widget build(BuildContext context) => FutureBuilder<bool>(
-        future: _loadRecipes(),
+        future: _initRecipesFuture,
         builder: (context, snapshot) => Scaffold(
           appBar: AppBar(
             title: const Text('Recipes'),
@@ -92,11 +99,6 @@ output.
               : const Center(child: Text('Loading recipes...')),
         ),
       );
-
-  Future<bool> _loadRecipes() async {
-    await RecipeRepository.init();
-    return true;
-  }
 
   void _updateSearchText(String text) => setState(() => _searchText = text);
 

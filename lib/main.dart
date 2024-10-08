@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'data/recipe_repository.dart';
+import 'data/settings.dart';
 import 'firebase_options.dart';
 import 'pages/edit_recipe_page.dart';
 import 'pages/home_page.dart';
@@ -11,6 +12,7 @@ import 'pages/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Settings.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(App());
 }

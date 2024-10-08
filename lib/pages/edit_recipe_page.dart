@@ -12,6 +12,7 @@ import 'package:uuid/uuid.dart';
 
 import '../data/recipe_data.dart';
 import '../data/recipe_repository.dart';
+import '../data/settings.dart';
 
 class EditRecipePage extends StatefulWidget {
   const EditRecipePage({
@@ -35,48 +36,23 @@ class _EditRecipePageState extends State<EditRecipePage> {
   final _provider = VertexProvider(
     chatModel: FirebaseVertexAI.instance.generativeModel(
       model: "gemini-1.5-flash",
-      generationConfig: GenerationConfig(
-        responseMimeType: 'application/json',
-        // TODO: add schema for validation, perhaps via functions
-        // - https://github.com/firebase/flutterfire/blob/master/packages/firebase_vertexai/firebase_vertexai/example/lib/main.dart#L99
-        // - https://github.com/firebase/flutterfire/blob/master/packages/firebase_vertexai/firebase_vertexai/example/lib/main.dart#L433
-        // responseSchema: Schema(
-        //   SchemaType.object,
-        //   properties: {
-        //     'modifications': Schema(
-        //       description: 'The modifications to the recipe you made',
-        //       SchemaType.string,
-        //     ),
-        //     'recipe': Schema(
-        //       SchemaType.object,
-        //       properties: {
-        //         'title': Schema(SchemaType.string),
-        //         'description': Schema(SchemaType.string),
-        //         'ingredients': Schema(
-        //           SchemaType.array,
-        //           items: Schema(SchemaType.string),
-        //         ),
-        //         'instructions': Schema(
-        //           SchemaType.array,
-        //           items: Schema(SchemaType.string),
-        //         ),
-        //       },
-        //   ),
-        // },
-        // ),
-      ),
+      generationConfig: GenerationConfig(responseMimeType: 'application/json'),
       systemInstruction: Content.system(
         '''
 You are a helpful assistant that generates recipes based on the ingredients and 
-instructions provided. 
+instructions provided as well as my food preferences, which are as follows:
+${Settings.foodPreferences.isEmpty ? 'I do not eat meatush' : Settings.foodPreferences}
 
-My food preferences are:
-- I don't like mushrooms, tomatoes or cilantro.
-- I love garlic and onions.
-- I avoid milk, so I always replace that with oat milk.
-- I try to keep carbs low, so I try to use appropriate substitutions.
-
-When you generate a recipe, you should generate a JSON object.
+Generate a response in JSON format with the following schema:
+{
+  "modifications": "The modifications to the recipe you made",
+  "recipe": {
+    "title": "Recipe Title",
+    "description": "Recipe Description",
+    "ingredients": ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
+    "instructions": ["Instruction 1", "Instruction 2", "Instruction 3"]
+  }
+}
 ''',
       ),
     ),
