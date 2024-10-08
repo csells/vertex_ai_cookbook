@@ -76,6 +76,14 @@ class RecipeRepository {
       final jsonList = json.decode(contents) as List;
       final defaultRecipes = <Recipe>[];
       for (var json in jsonList) {
+        // TODO: remove all of the code that calculates the embedding
+        // and updates the JSON; this is only to get the updated JSON
+        // for default_recipes.json that includes the embedding data so
+        // that it can be used for RAG searches -- once the embeddings
+        // have been calculated, the default_recipes.json asset can be
+        // replaced with the one augmented with the embeddings and they
+        // don't have to be calculated again for the default recipes --
+        // only for new and updated recipes, which happens one at a time.
         final title = json['title'];
         final description = json['description'];
         final ingredients = List<String>.from(json['ingredients']);
