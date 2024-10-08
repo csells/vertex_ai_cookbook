@@ -2,14 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
 
 import 'recipe_data.dart';
 
 class RecipeRepository {
   static const newRecipeID = '__NEW_RECIPE__';
-  static const _assetFileName = 'assets/recipes_default.json';
+  static const _defaultRecipesAsset = 'assets/recipes_default.json';
 
   static List<Recipe>? _recipes;
   static final items = ValueNotifier<Iterable<Recipe>>([]);
@@ -60,20 +62,45 @@ class RecipeRepository {
 
   static Future<void> _loadRecipes() async {
     final recipesCollection = _recipesCollection;
+    final provider = VertexProvider(
+      embeddingModel: FirebaseVertexAI.instance.generativeModel(
+        model: 'text-embedding-004',
+      ),
+    );
 
     // Check if the collection exists and has documents
     final snapshot = await recipesCollection.limit(1).get();
     if (snapshot.docs.isEmpty) {
       // If the collection is empty, seed it with default recipes
-      final contents = await rootBundle.loadString(_assetFileName);
+      final contents = await rootBundle.loadString(_defaultRecipesAsset);
       final jsonList = json.decode(contents) as List;
-      final defaultRecipes =
-          jsonList.map((json) => Recipe.fromJson(json)).toList();
+      final defaultRecipes = <Recipe>[];
+      for (var json in jsonList) {
+        final title = json['title'];
+        final description = json['description'];
+        final ingredients = List<String>.from(json['ingredients']);
+        final instructions = List<String>.from(json['instructions']);
+
+        final s = Recipe.getEmbeddingString(
+          title,
+          description,
+          ingredients,
+          instructions,
+        );
+
+        final embedding = await provider.getDocumentEmbedding(s);
+
+        json['embedding'] = embedding;
+        defaultRecipes.add(Recipe.fromJson(json));
+      }
 
       // Add default recipes to Firestore
       for (var recipe in defaultRecipes) {
         await recipesCollection.doc(recipe.id).set(recipe.toJson());
       }
+
+      // dump the recipes to the console
+      print(jsonEncode(defaultRecipes));
 
       _recipes = defaultRecipes;
     } else {

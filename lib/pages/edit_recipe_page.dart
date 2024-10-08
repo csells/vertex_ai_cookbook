@@ -150,8 +150,17 @@ Generate a response in JSON format with the following schema:
         ),
       );
 
-  void _onDone() {
+  Future<void> _onDone() async {
     if (!_formKey.currentState!.validate()) return;
+
+    final embedding = await _provider.getDocumentEmbedding(
+      Recipe.getEmbeddingString(
+        _titleController.text,
+        _descriptionController.text,
+        _ingredientsController.text.split('\n'),
+        _instructionsController.text.split('\n'),
+      ),
+    );
 
     final recipe = Recipe(
       id: _isNewRecipe ? const Uuid().v4() : widget.recipe.id,
@@ -159,6 +168,7 @@ Generate a response in JSON format with the following schema:
       description: _descriptionController.text,
       ingredients: _ingredientsController.text.split('\n'),
       instructions: _instructionsController.text.split('\n'),
+      embedding: embedding,
     );
 
     if (_isNewRecipe) {
@@ -167,7 +177,10 @@ Generate a response in JSON format with the following schema:
       RecipeRepository.updateRecipe(recipe);
     }
 
-    if (context.mounted) context.goNamed('home');
+    if (context.mounted) {
+      // ignore: use_build_context_synchronously
+      context.goNamed('home');
+    }
   }
 
   Future<void> _onMagic() async {
