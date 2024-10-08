@@ -22,10 +22,6 @@ class _HomePageState extends State<HomePage>
   Future<bool>? _initRecipesFuture;
 
   final _provider = VertexProvider(
-    // TODO: integrate RAG into the sample
-    embeddingModel: FirebaseVertexAI.instance.generativeModel(
-      model: 'text-embedding-004',
-    ),
     chatModel: FirebaseVertexAI.instance.generativeModel(
       model: "gemini-1.5-flash",
       generationConfig: GenerationConfig(responseMimeType: 'application/json'),
