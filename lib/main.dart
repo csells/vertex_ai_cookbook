@@ -8,7 +8,7 @@ import 'package:universal_platform/universal_platform.dart';
 
 import 'data/recipe_repository.dart';
 import 'data/settings.dart';
-import 'firebase_options.dart'; //https://firebase.google.com/docs/flutter/setup
+import 'firebase_options.dart'; // from https://firebase.google.com/docs/flutter/setup
 import 'pages/edit_recipe_page.dart';
 import 'pages/home_page.dart';
 
