@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>770573990412-443pjc1aik8m5khd4ja07ujhhlpobduu.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.770573990412-443pjc1aik8m5khd4ja07ujhhlpobduu</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>770573990412-edjdpq0b9saeio0hfbhjf0ht97t547ag.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCGGeucep9DlP6c3Vo4Jbbiddy4yUNagqk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>770573990412</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.vertexAiCookbook</string>
+	<key>PROJECT_ID</key>
+	<string>vertex-ai-cookbook</string>
+	<key>STORAGE_BUCKET</key>
+	<string>vertex-ai-cookbook.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:770573990412:ios:3968b9b2853e6de4de8c29</string>
+</dict>
+</plist>

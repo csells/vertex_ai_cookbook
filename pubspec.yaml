@@ -21,6 +21,11 @@ dependencies:
   firebase_core: ^3.6.0
   cloud_firestore: ^5.4.4
   shared_preferences: ^2.3.2
+  firebase_ui_auth: ^1.16.0
+  firebase_auth: ^5.3.1
+  google_sign_in: ^6.2.1
+  firebase_ui_oauth_google: ^1.4.0
+  universal_platform: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0

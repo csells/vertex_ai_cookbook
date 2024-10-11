@@ -2,6 +2,25 @@
 
 Firebase Vertex AI Cookbook Sample written in Flutter
 
+# Sample Features
+## Multi-message Chat
+TODO
+
+## Multimodal Input
+TODO
+
+## User Preferences
+TODO
+
+## Retrieval Augmented Generation (RAG)
+TODO: RAG is certainly possible with the API provided by the Vertex AI SDK for Dart, but there's a bug blocking
+
+## Non-chat Generative AI
+TODO
+
+## Multi-platform
+TODO: iOS, Android, Web, macOS (not Windows or Linux)
+
 # Getting Started
 
 This sample relies on a Firebase project, which you then initialize in your app. You can do that with the steps described in [the Get started with the Gemini API using the Vertex AI in Firebase SDKs docs](https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter).
@@ -54,9 +73,3 @@ TODO
 # AppCheck
 TODO: https://firebase.google.com/learn/pathways/firebase-app-check
 
-# Sample Features
-- Chat: TODO
-- Multimodal input: TODO
-- User Prefefences: TODO
-- RAG: TODO
-- Non-chat Generative AI: TODO

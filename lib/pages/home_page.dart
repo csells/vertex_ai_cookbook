@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
@@ -70,6 +71,14 @@ well as any trailing text commentary you care to provide:
           appBar: AppBar(
             title: const Text('Recipes'),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: 'Logout',
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  if (context.mounted) context.goNamed('login');
+                },
+              ),
               IconButton(
                 onPressed: snapshot.hasData ? _onAdd : null,
                 tooltip: 'Add Recipe',

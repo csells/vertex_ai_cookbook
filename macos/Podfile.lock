@@ -1145,6 +1145,12 @@ PODS:
     - abseil/meta/type_traits
     - abseil/xcprivacy
   - abseil/xcprivacy (1.20240116.2)
+  - AppAuth (1.7.5):
+    - AppAuth/Core (= 1.7.5)
+    - AppAuth/ExternalUserAgent (= 1.7.5)
+  - AppAuth/Core (1.7.5)
+  - AppAuth/ExternalUserAgent (1.7.5):
+    - AppAuth/Core
   - AppCheckCore (11.0.0):
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
@@ -1159,6 +1165,8 @@ PODS:
     - Firebase/CoreOnly (~> 11.2.0)
     - Firebase/Firestore (~> 11.2.0)
     - firebase_core
+    - FlutterMacOS
+  - desktop_webview_auth (0.0.1):
     - FlutterMacOS
   - file_selector_macos (0.0.1):
     - FlutterMacOS
@@ -1233,6 +1241,16 @@ PODS:
     - nanopb (~> 3.30910.0)
   - FirebaseSharedSwift (11.3.0)
   - FlutterMacOS (1.0.0)
+  - google_sign_in_ios (0.0.1):
+    - AppAuth (>= 1.7.4)
+    - Flutter
+    - FlutterMacOS
+    - GoogleSignIn (~> 7.1)
+    - GTMSessionFetcher (>= 3.4.0)
+  - GoogleSignIn (7.1.0):
+    - AppAuth (< 2.0, >= 1.7.3)
+    - GTMAppAuth (< 5.0, >= 4.1.1)
+    - GTMSessionFetcher/Core (~> 3.3)
   - GoogleUtilities/AppDelegateSwizzler (8.0.2):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -1347,7 +1365,14 @@ PODS:
     - gRPC-Core/Privacy (= 1.65.5)
   - gRPC-Core/Interface (1.65.5)
   - gRPC-Core/Privacy (1.65.5)
+  - GTMAppAuth (4.1.1):
+    - AppAuth/Core (~> 1.7)
+    - GTMSessionFetcher/Core (< 4.0, >= 3.3)
+  - GTMSessionFetcher (3.5.0):
+    - GTMSessionFetcher/Full (= 3.5.0)
   - GTMSessionFetcher/Core (3.5.0)
+  - GTMSessionFetcher/Full (3.5.0):
+    - GTMSessionFetcher/Core
   - leveldb-library (1.22.5)
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
@@ -1364,17 +1389,20 @@ PODS:
 
 DEPENDENCIES:
   - cloud_firestore (from `Flutter/ephemeral/.symlinks/plugins/cloud_firestore/macos`)
+  - desktop_webview_auth (from `Flutter/ephemeral/.symlinks/plugins/desktop_webview_auth/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - firebase_app_check (from `Flutter/ephemeral/.symlinks/plugins/firebase_app_check/macos`)
   - firebase_auth (from `Flutter/ephemeral/.symlinks/plugins/firebase_auth/macos`)
   - firebase_core (from `Flutter/ephemeral/.symlinks/plugins/firebase_core/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - google_sign_in_ios (from `Flutter/ephemeral/.symlinks/plugins/google_sign_in_ios/darwin`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
     - abseil
+    - AppAuth
     - AppCheckCore
     - BoringSSL-GRPC
     - Firebase
@@ -1388,9 +1416,11 @@ SPEC REPOS:
     - FirebaseFirestore
     - FirebaseFirestoreInternal
     - FirebaseSharedSwift
+    - GoogleSignIn
     - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
+    - GTMAppAuth
     - GTMSessionFetcher
     - leveldb-library
     - nanopb
@@ -1399,6 +1429,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   cloud_firestore:
     :path: Flutter/ephemeral/.symlinks/plugins/cloud_firestore/macos
+  desktop_webview_auth:
+    :path: Flutter/ephemeral/.symlinks/plugins/desktop_webview_auth/macos
   file_selector_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
   firebase_app_check:
@@ -1409,6 +1441,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/firebase_core/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
+  google_sign_in_ios:
+    :path: Flutter/ephemeral/.symlinks/plugins/google_sign_in_ios/darwin
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
   shared_preferences_foundation:
@@ -1416,9 +1450,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: d121da9ef7e2ff4cab7666e76c5a3e0915ae08c3
+  AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
   AppCheckCore: e25aaaac234b333320b0bebb8fc21ed3576819ba
   BoringSSL-GRPC: ca6a8e5d04812fce8ffd6437810c2d46f925eaeb
   cloud_firestore: 93bfa173db17eeb954a3c9865c70174331d42d76
+  desktop_webview_auth: 9bba53a29c9bc6a4ff621fd0ebfbb18856c4dada
   file_selector_macos: cc3858c981fe6889f364731200d6232dac1d812d
   Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
   firebase_app_check: 6a36131b68f873dd7e03b761606301b3acf185e1
@@ -1435,9 +1471,12 @@ SPEC CHECKSUMS:
   FirebaseFirestoreInternal: ad9b9ee2d3d430c8f31333a69b3b6737a7206232
   FirebaseSharedSwift: d39c2ad64a11a8d936ce25a42b00df47078bb59c
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  google_sign_in_ios: 07375bfbf2620bc93a602c0e27160d6afc6ead38
+  GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   "gRPC-C++": 2fa52b3141e7789a28a737f251e0c45b4cb20a87
   gRPC-Core: a27c294d6149e1c39a7d173527119cfbc3375ce4
+  GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   leveldb-library: e8eadf9008a61f9e1dde3978c086d2b6d9b9dc28
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
