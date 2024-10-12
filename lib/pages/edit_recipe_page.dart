@@ -55,14 +55,21 @@ Generate a response in JSON format with the following schema:
     ),
   );
 
-  Future<Recipe> _loadRecipe() async {
-    final repository = await RecipeRepository.forCurrentUser;
-    final recipe = repository.getRecipe(widget.recipeId);
-    _titleController.text = recipe.title;
-    _descriptionController.text = recipe.description;
-    _ingredientsController.text = recipe.ingredients.join('\n');
-    _instructionsController.text = recipe.instructions.join('\n');
-    return recipe;
+  late final Future<Recipe> _recipeFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _recipeFuture = () async {
+      final repository = await RecipeRepository.forCurrentUser;
+      final recipe = repository.getRecipe(widget.recipeId);
+      _titleController.text = recipe.title;
+      _descriptionController.text = recipe.description;
+      _ingredientsController.text = recipe.ingredients.join('\n');
+      _instructionsController.text = recipe.instructions.join('\n');
+      return recipe;
+    }();
   }
 
   @override
@@ -82,7 +89,7 @@ Generate a response in JSON format with the following schema:
           title: Text('${_isNewRecipe ? "Add" : "Edit"} Recipe'),
         ),
         body: FutureBuilderEx<Recipe>(
-          future: _loadRecipe(),
+          future: _recipeFuture,
           builder: (context, recipe) => Form(
             key: _formKey,
             child: SingleChildScrollView(

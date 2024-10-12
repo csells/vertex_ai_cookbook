@@ -58,10 +58,7 @@ well as any trailing text commentary you care to provide:
     ),
   );
 
-  Future<RecipeRepository> _loadRepository() async {
-    final repository = await RecipeRepository.forCurrentUser;
-    return repository;
-  }
+  final _repositoryFuture = RecipeRepository.forCurrentUser;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -84,15 +81,15 @@ well as any trailing text commentary you care to provide:
         drawer: Builder(builder: (context) {
           return _SettingsDrawer();
         }),
-        body: _RowOrTabBar(
-          tabs: const [
-            Tab(text: 'Recipes'),
-            Tab(text: 'Chat'),
-          ],
-          children: [
-            FutureBuilderEx<RecipeRepository>(
-              future: _loadRepository(),
-              builder: (context, repository) => Column(
+        body: FutureBuilderEx<RecipeRepository>(
+          future: _repositoryFuture,
+          builder: (context, repository) => _RowOrTabBar(
+            tabs: const [
+              Tab(text: 'Recipes'),
+              Tab(text: 'Chat'),
+            ],
+            children: [
+              Column(
                 children: [
                   SearchBox(onSearchChanged: _updateSearchText),
                   Expanded(
@@ -103,18 +100,15 @@ well as any trailing text commentary you care to provide:
                   ),
                 ],
               ),
-            ),
-            FutureBuilderEx<RecipeRepository>(
-              future: _loadRepository(),
-              builder: (context, repository) => LlmChatView(
+              LlmChatView(
                 provider: _provider,
                 responseBuilder: (context, response) => RecipeResponseView(
-                  repository: repository!,
+                  repository: repository,
                   response: response,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 

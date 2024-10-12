@@ -26,7 +26,7 @@ class RecipeRepository extends ChangeNotifier {
   static RecipeRepository? _currentUserRepository;
 
   static bool get hasCurrentUser => _currentUser != null;
-  static FutureOr<RecipeRepository> get forCurrentUser async {
+  static Future<RecipeRepository> get forCurrentUser async {
     // no user, no repository
     if (_currentUser == null) throw Exception('No user logged in');
 
