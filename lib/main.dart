@@ -18,9 +18,9 @@ void main() async {
 
   final firebaseOptions = DefaultFirebaseOptions.currentPlatform;
   await Firebase.initializeApp(options: firebaseOptions);
-  FirebaseUIAuth.configureProviders([
-    GoogleProvider(clientId: _googleClientIdFrom(firebaseOptions)),
-  ]);
+  // FirebaseUIAuth.configureProviders([
+  //   GoogleProvider(clientId: _googleClientIdFrom(firebaseOptions)),
+  // ]);
 
   runApp(App());
 }
@@ -34,23 +34,40 @@ String _googleClientIdFrom(FirebaseOptions options) =>
       _ => options.androidClientId!,
     };
 
-class App extends StatelessWidget {
-  App({super.key});
+class App extends StatefulWidget {
+  App({super.key}) {
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      debugPrint('authStateChanges: $user');
+      if (user == null) App.repo.value = null;
+    });
+  }
 
+  static final repo = ValueNotifier<RecipeRepository?>(null);
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
   final _router = GoRouter(
     routes: [
       GoRoute(
         name: 'home',
         path: '/',
-        builder: (BuildContext context, _) => const HomePage(),
+        builder: (context, state) {
+          assert(App.repo.value != null);
+          return HomePage(repository: App.repo.value!);
+        },
         routes: [
           GoRoute(
             name: 'edit',
             path: 'edit/:recipe',
             builder: (context, state) {
-              final recipeId = state.pathParameters['recipe']!;
-              final recipe = RecipeRepository.getRecipe(recipeId);
-              return EditRecipePage(recipe: recipe);
+              assert(App.repo.value != null);
+              return EditRecipePage(
+                repository: App.repo.value!,
+                recipeId: state.pathParameters['recipe']!,
+              );
             },
           ),
         ],
@@ -58,30 +75,83 @@ class App extends StatelessWidget {
       GoRoute(
         name: 'login',
         path: '/login',
-        builder: (BuildContext context, _) => SignInScreen(
-          actions: [
-            AuthStateChangeAction<SignedIn>(
-              (context, state) => context.goNamed('home'),
-            ),
-          ],
-        ),
+        builder: (context, state) {
+          assert(App.repo.value == null);
+          return SignInScreen(
+            providers: [
+              GoogleProvider(
+                clientId: _googleClientIdFrom(
+                  DefaultFirebaseOptions.currentPlatform,
+                ),
+              ),
+            ],
+            actions: [
+              AuthStateChangeAction<SignedIn>(
+                (context, state) {
+                  debugPrint('User signed in: ${state.user?.uid}');
+                  context.goNamed('loading');
+                },
+              ),
+            ],
+          );
+        },
+      ),
+      GoRoute(
+        name: 'loading',
+        path: '/loading',
+        builder: (context, state) {
+          assert(App.repo.value == null);
+          return _LoadingPage(
+            onRecipesLoaded: (repo) => App.repo.value = repo,
+          );
+        },
       ),
     ],
     redirect: (context, state) {
+      debugPrint('redirect: ${state.matchedLocation}');
       final loginLocation = state.namedLocation('login');
+      final loadingLocation = state.namedLocation('loading');
       final homeLocation = state.namedLocation('home');
       final loggedIn = FirebaseAuth.instance.currentUser != null;
       final loggingIn = state.matchedLocation == loginLocation;
+      final loaded = App.repo.value != null;
+      final loading = state.matchedLocation == loadingLocation;
 
-      if (!loggedIn && !loggingIn) return loginLocation;
-      if (loggedIn && loggingIn) return homeLocation;
+      if (!loggedIn) return !loggingIn ? loginLocation : null;
+      if (!loaded) return !loading ? loadingLocation : null;
+      if (loaded && loading) return homeLocation;
       return null;
     },
+    refreshListenable: App.repo,
+    debugLogDiagnostics: true,
   );
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
         routerConfig: _router,
         debugShowCheckedModeBanner: false,
+      );
+}
+
+class _LoadingPage extends StatelessWidget {
+  const _LoadingPage({required this.onRecipesLoaded});
+  final void Function(RecipeRepository repo) onRecipesLoaded;
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<RecipeRepository>(
+        future: RecipeRepository.getUserRepository(
+                FirebaseAuth.instance.currentUser!)
+            .then((repo) {
+          onRecipesLoaded(repo);
+          return repo;
+        }),
+        builder: (context, snapshot) => Scaffold(
+          appBar: AppBar(title: const Text('Recipes')),
+          body: snapshot.hasError
+              ? Center(child: Text(snapshot.error.toString()))
+              : snapshot.hasData
+                  ? const Center(child: Text('Recipes Loaded'))
+                  : const Center(child: Text('Loading recipes...')),
+        ),
       );
 }

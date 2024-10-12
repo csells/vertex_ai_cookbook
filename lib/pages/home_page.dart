@@ -11,7 +11,8 @@ import '../views/recipe_response_view.dart';
 import '../views/search_box.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.repository});
+  final RecipeRepository repository;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -20,7 +21,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   String _searchText = '';
-  Future<bool>? _initRecipesFuture;
 
   final _provider = VertexProvider(
     chatModel: FirebaseVertexAI.instance.generativeModel(
@@ -59,110 +59,50 @@ well as any trailing text commentary you care to provide:
   );
 
   @override
-  void initState() {
-    super.initState();
-    _initRecipesFuture = RecipeRepository.init().then((_) => true);
-  }
-
-  @override
-  Widget build(BuildContext context) => FutureBuilder<bool>(
-        future: _initRecipesFuture,
-        builder: (context, snapshot) => Scaffold(
-          appBar: AppBar(
-            title: const Text('Recipes'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.logout),
-                tooltip: 'Logout',
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                  if (context.mounted) context.goNamed('login');
-                },
-              ),
-              IconButton(
-                onPressed: snapshot.hasData ? _onAdd : null,
-                tooltip: 'Add Recipe',
-                icon: const Icon(Icons.add),
-              ),
-            ],
-          ),
-          drawer: Builder(builder: (context) {
-            final controller = TextEditingController(
-              text: Settings.foodPreferences,
-            );
-            return Drawer(
-              child: ListView(
-                children: [
-                  const DrawerHeader(child: Text('Food Preferences')),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: controller,
-                      maxLines: 5,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter your food preferences...',
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1),
-                        ),
-                      ),
-                    ),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Recipes'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              tooltip: 'Logout',
+              onPressed: () => FirebaseAuth.instance.signOut(),
+            ),
+            IconButton(
+              onPressed: _onAdd,
+              tooltip: 'Add Recipe',
+              icon: const Icon(Icons.add),
+            ),
+          ],
+        ),
+        drawer: Builder(builder: (context) {
+          return _SettingsDrawer();
+        }),
+        body: _RowOrTabBar(
+          tabs: const [
+            Tab(text: 'Recipes'),
+            Tab(text: 'Chat'),
+          ],
+          children: [
+            Column(
+              children: [
+                SearchBox(onSearchChanged: _updateSearchText),
+                Expanded(
+                  child: RecipeListView(
+                    repository: widget.repository,
+                    searchText: _searchText,
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: OverflowBar(
-                        spacing: 8,
-                        children: [
-                          ElevatedButton(
-                            child: const Text('Cancel'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          OutlinedButton(
-                            child: const Text('Save'),
-                            onPressed: () {
-                              Settings.setFoodPreferences(controller.text);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
+              ],
+            ),
+            LlmChatView(
+              provider: _provider,
+              responseBuilder: (context, response) => RecipeResponseView(
+                repository: widget.repository,
+                response: response,
               ),
-            );
-          }),
-          body: snapshot.hasData
-              ? _RowOrTabBar(
-                  tabs: const [
-                    Tab(text: 'Recipes'),
-                    Tab(text: 'Chat'),
-                  ],
-                  children: [
-                    Column(
-                      children: [
-                        SearchBox(onSearchChanged: _updateSearchText),
-                        Expanded(
-                            child: RecipeListView(searchText: _searchText)),
-                      ],
-                    ),
-                    LlmChatView(
-                      provider: _provider,
-                      responseBuilder: (context, response) =>
-                          RecipeResponseView(response),
-                    ),
-                  ],
-                )
-              : const Center(child: Text('Loading recipes...')),
+            ),
+          ],
         ),
       );
 
@@ -171,6 +111,64 @@ well as any trailing text commentary you care to provide:
   void _onAdd() => context.goNamed(
         'edit',
         pathParameters: {'recipe': RecipeRepository.newRecipeID},
+      );
+}
+
+class _SettingsDrawer extends StatelessWidget {
+  final controller = TextEditingController(
+    text: Settings.foodPreferences,
+  );
+
+  @override
+  Widget build(BuildContext context) => Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(child: Text('Food Preferences')),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: controller,
+                maxLines: 5,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your food preferences...',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: OverflowBar(
+                  spacing: 8,
+                  children: [
+                    ElevatedButton(
+                      child: const Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    OutlinedButton(
+                      child: const Text('Save'),
+                      onPressed: () {
+                        Settings.setFoodPreferences(controller.text);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       );
 }
 

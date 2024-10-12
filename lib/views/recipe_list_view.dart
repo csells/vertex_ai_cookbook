@@ -8,9 +8,13 @@ import '../data/recipe_repository.dart';
 import 'recipe_view.dart';
 
 class RecipeListView extends StatefulWidget {
+  const RecipeListView({
+    super.key,
+    required this.repository,
+    required this.searchText,
+  });
   final String searchText;
-
-  const RecipeListView({super.key, required this.searchText});
+  final RecipeRepository repository;
 
   @override
   _RecipeListViewState createState() => _RecipeListViewState();
@@ -19,7 +23,6 @@ class RecipeListView extends StatefulWidget {
 class _RecipeListViewState extends State<RecipeListView> {
   final _expanded = <String, bool>{};
 
-  // NEW: RB: 240826: Sort by Title:
   Iterable<Recipe> _filteredRecipes(Iterable<Recipe> recipes) => recipes
       .where((recipe) =>
           recipe.title
@@ -36,7 +39,7 @@ class _RecipeListViewState extends State<RecipeListView> {
   @override
   Widget build(BuildContext context) =>
       ValueListenableBuilder<Iterable<Recipe>?>(
-        valueListenable: RecipeRepository.items,
+        valueListenable: widget.repository.items,
         builder: (context, recipes, child) {
           if (recipes == null) {
             return const Center(child: CircularProgressIndicator());
@@ -91,6 +94,6 @@ class _RecipeListViewState extends State<RecipeListView> {
       ),
     );
 
-    if (shouldDelete == true) await RecipeRepository.deleteRecipe(recipe);
+    if (shouldDelete == true) await widget.repository.deleteRecipe(recipe);
   }
 }

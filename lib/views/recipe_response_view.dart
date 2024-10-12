@@ -9,9 +9,14 @@ import '../data/recipe_repository.dart';
 import 'recipe_content_view.dart';
 
 class RecipeResponseView extends StatelessWidget {
-  const RecipeResponseView(this.response, {super.key});
+  const RecipeResponseView({
+    required this.repository,
+    required this.response,
+    super.key,
+  });
 
   final String response;
+  final RecipeRepository repository;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,7 @@ class RecipeResponseView extends StatelessWidget {
       // add a button to add the recipe to the list
       children.add(const Gap(16));
       children.add(OutlinedButton(
-        onPressed: () => RecipeRepository.addNewRecipe(recipe),
+        onPressed: () => repository.addNewRecipe(recipe),
         child: const Text('Add Recipe'),
       ));
       children.add(const Gap(16));

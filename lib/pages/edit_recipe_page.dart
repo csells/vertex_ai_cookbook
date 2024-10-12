@@ -15,11 +15,13 @@ import '../data/recipe_repository.dart';
 import '../data/settings.dart';
 
 class EditRecipePage extends StatefulWidget {
-  const EditRecipePage({
+  EditRecipePage({
     super.key,
-    required this.recipe,
-  });
+    required this.repository,
+    required String recipeId,
+  }) : recipe = repository.getRecipe(recipeId);
 
+  final RecipeRepository repository;
   final Recipe recipe;
 
   @override
@@ -162,9 +164,9 @@ Generate a response in JSON format with the following schema:
     );
 
     if (_isNewRecipe) {
-      RecipeRepository.addNewRecipe(recipe);
+      widget.repository.addNewRecipe(recipe);
     } else {
-      RecipeRepository.updateRecipe(recipe);
+      widget.repository.updateRecipe(recipe);
     }
 
     if (context.mounted) context.goNamed('home');
