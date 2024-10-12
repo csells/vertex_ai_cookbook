@@ -55,6 +55,7 @@ class _AppState extends State<App> {
         name: 'login',
         path: '/login',
         builder: (context, state) => SignInScreen(
+          showAuthActionSwitch: false,
           providers: [
             GoogleProvider(
               clientId: _googleClientIdFrom(
