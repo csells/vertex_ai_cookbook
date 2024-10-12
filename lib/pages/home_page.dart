@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/recipe_repository.dart';
@@ -11,8 +12,7 @@ import '../views/recipe_response_view.dart';
 import '../views/search_box.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.repository});
-  final RecipeRepository repository;
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -58,6 +58,11 @@ well as any trailing text commentary you care to provide:
     ),
   );
 
+  Future<RecipeRepository> _loadRepository() async {
+    final repository = await RecipeRepository.forCurrentUser;
+    return repository;
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -65,8 +70,9 @@ well as any trailing text commentary you care to provide:
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
-              tooltip: 'Logout',
-              onPressed: () => FirebaseAuth.instance.signOut(),
+              tooltip:
+                  'Logout: ${FirebaseAuth.instance.currentUser!.displayName}',
+              onPressed: () async => await FirebaseAuth.instance.signOut(),
             ),
             IconButton(
               onPressed: _onAdd,
@@ -84,22 +90,28 @@ well as any trailing text commentary you care to provide:
             Tab(text: 'Chat'),
           ],
           children: [
-            Column(
-              children: [
-                SearchBox(onSearchChanged: _updateSearchText),
-                Expanded(
-                  child: RecipeListView(
-                    repository: widget.repository,
-                    searchText: _searchText,
+            FutureBuilderEx<RecipeRepository>(
+              future: _loadRepository(),
+              builder: (context, repository) => Column(
+                children: [
+                  SearchBox(onSearchChanged: _updateSearchText),
+                  Expanded(
+                    child: RecipeListView(
+                      searchText: _searchText,
+                      repository: repository!,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            LlmChatView(
-              provider: _provider,
-              responseBuilder: (context, response) => RecipeResponseView(
-                repository: widget.repository,
-                response: response,
+            FutureBuilderEx<RecipeRepository>(
+              future: _loadRepository(),
+              builder: (context, repository) => LlmChatView(
+                provider: _provider,
+                responseBuilder: (context, response) => RecipeResponseView(
+                  repository: repository!,
+                  response: response,
+                ),
               ),
             ),
           ],

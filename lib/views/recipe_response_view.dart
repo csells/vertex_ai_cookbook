@@ -15,8 +15,8 @@ class RecipeResponseView extends StatelessWidget {
     super.key,
   });
 
-  final String response;
   final RecipeRepository repository;
+  final String response;
 
   @override
   Widget build(BuildContext context) {

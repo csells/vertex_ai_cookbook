@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -15,14 +16,8 @@ import '../data/recipe_repository.dart';
 import '../data/settings.dart';
 
 class EditRecipePage extends StatefulWidget {
-  EditRecipePage({
-    super.key,
-    required this.repository,
-    required String recipeId,
-  }) : recipe = repository.getRecipe(recipeId);
-
-  final RecipeRepository repository;
-  final Recipe recipe;
+  const EditRecipePage({required this.recipeId, super.key});
+  final String recipeId;
 
   @override
   _EditRecipePageState createState() => _EditRecipePageState();
@@ -30,10 +25,10 @@ class EditRecipePage extends StatefulWidget {
 
 class _EditRecipePageState extends State<EditRecipePage> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _titleController;
-  late final TextEditingController _descriptionController;
-  late final TextEditingController _ingredientsController;
-  late final TextEditingController _instructionsController;
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _ingredientsController = TextEditingController();
+  final _instructionsController = TextEditingController();
 
   final _provider = VertexProvider(
     chatModel: FirebaseVertexAI.instance.generativeModel(
@@ -60,22 +55,14 @@ Generate a response in JSON format with the following schema:
     ),
   );
 
-  @override
-  void initState() {
-    super.initState();
-
-    _titleController = TextEditingController(
-      text: widget.recipe.title,
-    );
-    _descriptionController = TextEditingController(
-      text: widget.recipe.description,
-    );
-    _ingredientsController = TextEditingController(
-      text: widget.recipe.ingredients.join('\n'),
-    );
-    _instructionsController = TextEditingController(
-      text: widget.recipe.instructions.join('\n'),
-    );
+  Future<Recipe> _loadRecipe() async {
+    final repository = await RecipeRepository.forCurrentUser;
+    final recipe = repository.getRecipe(widget.recipeId);
+    _titleController.text = recipe.title;
+    _descriptionController.text = recipe.description;
+    _ingredientsController.text = recipe.ingredients.join('\n');
+    _instructionsController.text = recipe.instructions.join('\n');
+    return recipe;
   }
 
   @override
@@ -87,88 +74,95 @@ Generate a response in JSON format with the following schema:
     super.dispose();
   }
 
-  bool get _isNewRecipe => widget.recipe.id == RecipeRepository.newRecipeID;
+  bool get _isNewRecipe => widget.recipeId == RecipeRepository.newRecipeID;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text('${_isNewRecipe ? "Add" : "Edit"} Recipe')),
-        body: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Title',
-                    hintText: 'Enter a name for your recipe...',
-                  ),
-                  validator: (value) => (value == null || value.isEmpty)
-                      ? 'Recipe title is requires'
-                      : null,
-                ),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
-                    hintText: 'In a few words, describe your recipe...',
-                  ),
-                  maxLines: null,
-                ),
-                TextField(
-                  controller: _ingredientsController,
-                  decoration: const InputDecoration(
-                    labelText: 'Ingredients🍎 (one per line)',
-                    hintText: 'e.g., 2 cups flour\n1 tsp salt\n1 cup sugar',
-                  ),
-                  maxLines: null,
-                ),
-                TextField(
-                  controller: _instructionsController,
-                  decoration: const InputDecoration(
-                    labelText: 'Instructions🥧 (one per line)',
-                    hintText: 'e.g., Mix ingredients\nBake for 30 minutes',
-                  ),
-                  maxLines: null,
-                ),
-                const Gap(16),
-                OverflowBar(
-                  spacing: 16,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _onMagic,
-                      child: const Text('Magic'),
+        appBar: AppBar(
+          title: Text('${_isNewRecipe ? "Add" : "Edit"} Recipe'),
+        ),
+        body: FutureBuilderEx<Recipe>(
+          future: _loadRecipe(),
+          builder: (context, recipe) => Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
+                      hintText: 'Enter a name for your recipe...',
                     ),
-                    OutlinedButton(
-                      onPressed: _onDone,
-                      child: const Text('Done'),
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Recipe title is requires'
+                        : null,
+                  ),
+                  TextField(
+                    controller: _descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      hintText: 'In a few words, describe your recipe...',
                     ),
-                  ],
-                ),
-              ],
+                    maxLines: null,
+                  ),
+                  TextField(
+                    controller: _ingredientsController,
+                    decoration: const InputDecoration(
+                      labelText: 'Ingredients🍎 (one per line)',
+                      hintText: 'e.g., 2 cups flour\n1 tsp salt\n1 cup sugar',
+                    ),
+                    maxLines: null,
+                  ),
+                  TextField(
+                    controller: _instructionsController,
+                    decoration: const InputDecoration(
+                      labelText: 'Instructions🥧 (one per line)',
+                      hintText: 'e.g., Mix ingredients\nBake for 30 minutes',
+                    ),
+                    maxLines: null,
+                  ),
+                  const Gap(16),
+                  OverflowBar(
+                    spacing: 16,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async => await _onMagic(),
+                        child: const Text('Magic'),
+                      ),
+                      OutlinedButton(
+                        onPressed: () async => await _onDone(),
+                        child: const Text('Done'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       );
 
-  void _onDone() {
+  Future<void> _onDone() async {
     if (!_formKey.currentState!.validate()) return;
 
     final recipe = Recipe(
-      id: _isNewRecipe ? const Uuid().v4() : widget.recipe.id,
+      id: _isNewRecipe ? const Uuid().v4() : widget.recipeId,
       title: _titleController.text,
       description: _descriptionController.text,
       ingredients: _ingredientsController.text.split('\n'),
       instructions: _instructionsController.text.split('\n'),
     );
 
+    final repository = await RecipeRepository.forCurrentUser;
     if (_isNewRecipe) {
-      widget.repository.addNewRecipe(recipe);
+      repository.addNewRecipe(recipe);
     } else {
-      widget.repository.updateRecipe(recipe);
+      repository.updateRecipe(recipe);
     }
 
+    // ignore: use_build_context_synchronously
     if (context.mounted) context.goNamed('home');
   }
 
@@ -178,9 +172,9 @@ Generate a response in JSON format with the following schema:
       '${_ingredientsController.text}\n\n${_instructionsController.text}',
     );
     var response = await stream.join();
-    final json = jsonDecode(response);
 
     try {
+      final json = jsonDecode(response);
       final modifications = json['modifications'];
       final recipe = Recipe.fromJson(json['recipe']);
 

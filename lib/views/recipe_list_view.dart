@@ -13,8 +13,9 @@ class RecipeListView extends StatefulWidget {
     required this.repository,
     required this.searchText,
   });
-  final String searchText;
+
   final RecipeRepository repository;
+  final String searchText;
 
   @override
   _RecipeListViewState createState() => _RecipeListViewState();
@@ -37,32 +38,22 @@ class _RecipeListViewState extends State<RecipeListView> {
     ..sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
 
   @override
-  Widget build(BuildContext context) =>
-      ValueListenableBuilder<Iterable<Recipe>?>(
-        valueListenable: widget.repository.items,
-        builder: (context, recipes, child) {
-          if (recipes == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final displayedRecipes = _filteredRecipes(recipes).toList();
-          return ListView.builder(
-            itemCount: displayedRecipes.length,
-            itemBuilder: (context, index) {
-              final recipe = displayedRecipes[index];
-              final recipeId = recipe.id;
-              return RecipeView(
-                key: ValueKey(recipeId),
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: widget.repository,
+        builder: (context, child) => ListView(
+          children: [
+            for (final recipe in _filteredRecipes(widget.repository.recipes))
+              RecipeView(
+                key: ValueKey(recipe.id),
                 recipe: recipe,
-                expanded: _expanded[recipeId] == true,
+                expanded: _expanded[recipe.id] == true,
                 onExpansionChanged: (expanded) =>
                     _onExpand(recipe.id, expanded),
                 onEdit: () => _onEdit(recipe),
-                onDelete: () => _onDelete(recipe),
-              );
-            },
-          );
-        },
+                onDelete: () async => await _onDelete(recipe),
+              ),
+          ],
+        ),
       );
 
   void _onExpand(String recipeId, bool expanded) =>
@@ -73,7 +64,7 @@ class _RecipeListViewState extends State<RecipeListView> {
         pathParameters: {'recipe': recipe.id},
       );
 
-  void _onDelete(Recipe recipe) async {
+  Future<void> _onDelete(Recipe recipe) async {
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -94,6 +85,8 @@ class _RecipeListViewState extends State<RecipeListView> {
       ),
     );
 
-    if (shouldDelete == true) await widget.repository.deleteRecipe(recipe);
+    if (shouldDelete == true) {
+      await widget.repository.deleteRecipe(recipe);
+    }
   }
 }
