@@ -69,6 +69,16 @@ TODO: README/create-firestore-default-database.png
 
 # Auth
 TODO
+as per: https://firebase.google.com/docs/rules/basics#cloud-firestore_2
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{documents=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId
+    }
+  }
+}
+
 
 # AppCheck
 TODO: https://firebase.google.com/learn/pathways/firebase-app-check

@@ -8,7 +8,6 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import 'recipe_data.dart';
 
-// TODO: only access recipes from the currently logged in user
 class RecipeRepository extends ChangeNotifier {
   RecipeRepository._({
     required CollectionReference collection,
