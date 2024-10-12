@@ -55,22 +55,15 @@ Generate a response in JSON format with the following schema:
     ),
   );
 
-  late final Future<Recipe> _recipeFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    
-    _recipeFuture = () async {
-      final repository = await RecipeRepository.forCurrentUser;
-      final recipe = repository.getRecipe(widget.recipeId);
-      _titleController.text = recipe.title;
-      _descriptionController.text = recipe.description;
-      _ingredientsController.text = recipe.ingredients.join('\n');
-      _instructionsController.text = recipe.instructions.join('\n');
-      return recipe;
-    }();
-  }
+  late final _recipeFuture = Future<Recipe>(() async {
+    final repository = await RecipeRepository.forCurrentUser;
+    final recipe = repository.getRecipe(widget.recipeId);
+    _titleController.text = recipe.title;
+    _descriptionController.text = recipe.description;
+    _ingredientsController.text = recipe.ingredients.join('\n');
+    _instructionsController.text = recipe.instructions.join('\n');
+    return recipe;
+  });
 
   @override
   void dispose() {
