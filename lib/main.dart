@@ -56,6 +56,7 @@ class _AppState extends State<App> {
         path: '/login',
         builder: (context, state) => SignInScreen(
           showAuthActionSwitch: false,
+          breakpoint: 600,
           providers: [
             GoogleProvider(
               clientId: _googleClientIdFrom(
