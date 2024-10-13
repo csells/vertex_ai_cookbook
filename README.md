@@ -1,8 +1,6 @@
-# vertex_ai_cookbook
+The vertex_ai_cookbook project is a sample app written to showcase the power of Firebase Vertex AI. It's written in Flutter and leverages [the Flutter AI Toolkit](https://pub.dev/packages/flutter_ai_toolkit) as well as [Firebase Auth](https://pub.dev/packages/firebase_auth) and [Cloud Firestore](https://pub.dev/packages/cloud_firestore). At it's core, it relies on [Vertex AI for Firebase](https://pub.dev/packages/firebase_vertexai) for all of it's generative AI features.
 
-Firebase Vertex AI Cookbook Sample written in Flutter
-
-# Sample Features
+# Features
 ## Multi-message Chat
 TODO
 

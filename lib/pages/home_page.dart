@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:go_router/go_router.dart';
+import 'package:multi_split_view/multi_split_view.dart';
 
 import '../data/recipe_repository.dart';
 import '../data/settings.dart';
@@ -82,7 +83,7 @@ well as any trailing text commentary you care to provide:
         }),
         body: FutureBuilderEx<RecipeRepository>(
           future: _repositoryFuture,
-          builder: (context, repository) => _RowOrTabBar(
+          builder: (context, repository) => _SideBySideOrTabBar(
             tabs: const [
               Tab(text: 'Recipes'),
               Tab(text: 'Chat'),
@@ -177,16 +178,16 @@ class _SettingsDrawer extends StatelessWidget {
       );
 }
 
-class _RowOrTabBar extends StatefulWidget {
-  const _RowOrTabBar({required this.tabs, required this.children});
+class _SideBySideOrTabBar extends StatefulWidget {
+  const _SideBySideOrTabBar({required this.tabs, required this.children});
   final List<Widget> tabs;
   final List<Widget> children;
 
   @override
-  State<_RowOrTabBar> createState() => _RowOrTabBarState();
+  State<_SideBySideOrTabBar> createState() => _SideBySideOrTabBarState();
 }
 
-class _RowOrTabBarState extends State<_RowOrTabBar>
+class _SideBySideOrTabBarState extends State<_SideBySideOrTabBar>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -198,8 +199,16 @@ class _RowOrTabBarState extends State<_RowOrTabBar>
 
   @override
   Widget build(BuildContext context) => MediaQuery.of(context).size.width > 600
-      ? Row(
-          children: [for (var child in widget.children) Expanded(child: child)],
+      ? MultiSplitViewTheme(
+          data: MultiSplitViewThemeData(
+            dividerPainter: DividerPainters.grooved1(),
+          ),
+          child: MultiSplitView(
+            initialAreas: [
+              for (var child in widget.children)
+                Area(builder: (context, area) => child)
+            ],
+          ),
         )
       : Column(
           children: [
