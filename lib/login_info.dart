@@ -31,6 +31,8 @@ class LoginInfo extends ChangeNotifier {
 
   static final instance = LoginInfo._();
 
+  String? get displayName => user?.displayName;
+
   Future<void> logout() async {
     user = null;
     await FirebaseAuth.instance.signOut();

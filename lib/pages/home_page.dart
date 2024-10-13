@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
@@ -68,8 +67,7 @@ well as any trailing text commentary you care to provide:
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
-              tooltip:
-                  'Logout: ${FirebaseAuth.instance.currentUser!.displayName}',
+              tooltip: 'Logout: ${LoginInfo.instance.displayName!}',
               onPressed: () async => await LoginInfo.instance.logout(),
             ),
             IconButton(
