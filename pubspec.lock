@@ -377,12 +377,11 @@ packages:
   flutter_ai_toolkit:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "6daf537c282b5b5836f99f61352311f5a8a8bf31"
-      url: "https://github.com/csells/flutter_ai_toolkit.git"
-    source: git
-    version: "0.1.5"
+      name: flutter_ai_toolkit
+      sha256: ee0e167fd1b62780be9f455b1bcede77b1fc2999ed67a05759b92f967c939cd6
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.6"
   flutter_lints:
     dependency: "direct dev"
     description:
