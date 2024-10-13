@@ -47,3 +47,4 @@ sha1_fingerprint.txt
 GoogleService-Info.plist
 lib/google_android_client_id.dart
 android/app/google-services.json
+lib/google_client_id.dart

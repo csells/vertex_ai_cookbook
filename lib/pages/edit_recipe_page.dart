@@ -1,6 +1,3 @@
-// NOTE: RB: 240826: Switched to a form for editing recipes. Added text hints
-// and validation for required fields.
-
 import 'dart:convert';
 
 import 'package:firebase_vertexai/firebase_vertexai.dart';
@@ -184,13 +181,21 @@ Generate a response in JSON format with the following schema:
         context: context,
         builder: (context) => AlertDialog(
           title: Text(recipe.title),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Modifications:'),
-              const Gap(16),
-              Text(_wrapText(modifications)),
-            ],
+          content: SizedBox(
+            height: 200,
+            width: 400,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Modifications:'),
+                const Gap(16),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Text(modifications),
+                  ),
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -231,25 +236,5 @@ Generate a response in JSON format with the following schema:
         );
       }
     }
-  }
-
-  String _wrapText(String text, {int lineLength = 80}) {
-    final words = text.split(RegExp(r'\s+'));
-    final lines = <String>[];
-
-    var currentLine = '';
-    for (final word in words) {
-      if (currentLine.isEmpty) {
-        currentLine = word;
-      } else if (('$currentLine $word').length <= lineLength) {
-        currentLine += ' $word';
-      } else {
-        lines.add(currentLine);
-        currentLine = word;
-      }
-    }
-
-    if (currentLine.isNotEmpty) lines.add(currentLine);
-    return lines.join('\n');
   }
 }
