@@ -1,13 +1,39 @@
 The vertex_ai_cookbook project is a sample app written to showcase the power of Firebase Vertex AI. It's written in Flutter and leverages [the Flutter AI Toolkit](https://pub.dev/packages/flutter_ai_toolkit) as well as [Firebase Auth](https://pub.dev/packages/firebase_auth) and [Cloud Firestore](https://pub.dev/packages/cloud_firestore). At it's core, it relies on [Vertex AI for Firebase](https://pub.dev/packages/firebase_vertexai) for all of it's generative AI features.
 
 # Features
+Once you've logged in using your Google account, the cookbook app is split into two sections, one for recipes and one for a chat with the Vertex AI LLM. Those two sections are either side-by-side for desktop form factors:
+
+TODO: intro-split.png
+
+Or they're on individual tabs for mobile form factors:
+
+TODO: intro-tabbed.png
+
+When logging in as a new user, you'll get a set of default recipes for you to play around with. All of those recipes are stored in Cloud Firestore for you and you're free to explore them by simply expanding them to see their ingredients and instructions:
+
+TODO: intro-expanded-recipe.png
+
+These are your recipes, so feel free to add to them, edit them, delete them or search through them as you see fit:
+
+
+
+add new recipes, edit existing recipes, delete recipes and even search recipes:
+
+## Searching Recipes
+
+TODO
+
+## Generating Recipes
+
+TODO
+
+## User Preferences
+TODO
+
 ## Multi-message Chat
 TODO
 
 ## Multimodal Input
-TODO
-
-## User Preferences
 TODO
 
 ## Retrieval Augmented Generation (RAG)

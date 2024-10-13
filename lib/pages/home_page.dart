@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:go_router/go_router.dart';
-import 'package:multi_split_view/multi_split_view.dart';
+import 'package:split_view/split_view.dart';
 
 import '../data/recipe_repository.dart';
 import '../data/settings.dart';
@@ -64,7 +64,7 @@ well as any trailing text commentary you care to provide:
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Recipes'),
+          title: const Text('Vertex AI Cookbook'),
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
@@ -198,17 +198,27 @@ class _SideBySideOrTabBarState extends State<_SideBySideOrTabBar>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => MediaQuery.of(context).size.width > 600
-      ? MultiSplitViewTheme(
-          data: MultiSplitViewThemeData(
-            dividerPainter: DividerPainters.grooved1(),
+      ? SplitView(
+          viewMode: SplitViewMode.Horizontal,
+          gripColor: Colors.transparent,
+          indicator: SplitIndicator(
+            viewMode: SplitViewMode.Horizontal,
+            color: Colors.grey,
           ),
-          child: MultiSplitView(
-            initialAreas: [
-              for (var child in widget.children)
-                Area(builder: (context, area) => child)
-            ],
+          gripColorActive: Colors.transparent,
+          activeIndicator: SplitIndicator(
+            viewMode: SplitViewMode.Horizontal,
+            isActive: true,
+            color: Colors.black,
           ),
+          children: widget.children,
         )
       : Column(
           children: [

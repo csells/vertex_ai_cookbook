@@ -717,14 +717,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
-  multi_split_view:
-    dependency: "direct main"
-    description:
-      name: multi_split_view
-      sha256: "30548c5e4cc6f24d5d4ca784dc5dff80d599ef1f704b1565819eb88a74f0eb62"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.5.0"
   ollama_dart:
     dependency: transitive
     description:
@@ -890,6 +882,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  split_view:
+    dependency: "direct main"
+    description:
+      name: split_view
+      sha256: "7ad0e1c40703901aa1175fd465dec5e965b55324f9cc8e51526479a4a96d01a4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   sprintf:
     dependency: transitive
     description:
