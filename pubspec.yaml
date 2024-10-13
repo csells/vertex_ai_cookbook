@@ -25,7 +25,6 @@ dependencies:
   firebase_auth: ^5.3.1
   google_sign_in: ^6.2.1
   firebase_ui_oauth_google: ^1.4.0
-  universal_platform: ^1.1.0
   future_builder_ex: ^4.0.0
   firebase_ui_oauth: ^1.6.0
 
