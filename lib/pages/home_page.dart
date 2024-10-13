@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../data/recipe_repository.dart';
 import '../data/settings.dart';
+import '../login_info.dart';
 import '../views/recipe_list_view.dart';
 import '../views/recipe_response_view.dart';
 import '../views/search_box.dart';
@@ -69,7 +70,7 @@ well as any trailing text commentary you care to provide:
               icon: const Icon(Icons.logout),
               tooltip:
                   'Logout: ${FirebaseAuth.instance.currentUser!.displayName}',
-              onPressed: () async => await FirebaseAuth.instance.signOut(),
+              onPressed: () async => await LoginInfo.instance.logout(),
             ),
             IconButton(
               onPressed: _onAdd,

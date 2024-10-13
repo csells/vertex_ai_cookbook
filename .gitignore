@@ -45,3 +45,4 @@ lib/firebase_options.dart
 firebase.json
 sha1_fingerprint.txt
 GoogleService-Info.plist
+lib/google_android_client_id.dart

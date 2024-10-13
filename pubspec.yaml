@@ -27,6 +27,7 @@ dependencies:
   firebase_ui_oauth_google: ^1.4.0
   universal_platform: ^1.1.0
   future_builder_ex: ^4.0.0
+  firebase_ui_oauth: ^1.6.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0

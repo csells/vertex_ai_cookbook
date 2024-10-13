@@ -44,7 +44,7 @@ class RecipeRepository extends ChangeNotifier {
     return _currentUserRepository!;
   }
 
-  static void setCurrentUser(User? user) {
+  static set user(User? user) {
     // clear the repository cache when the user is logged out
     if (user == null) {
       _currentUser = null;

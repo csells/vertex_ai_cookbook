@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 import 'data/recipe_repository.dart';
 import 'data/settings.dart';
 import 'firebase_options.dart'; // from https://firebase.google.com/docs/flutter/setup
+import 'login_info.dart';
 import 'pages/edit_recipe_page.dart';
 import 'pages/home_page.dart';
 
@@ -22,13 +21,10 @@ void main() async {
 class App extends StatefulWidget {
   App({super.key}) {
     FirebaseAuth.instance.authStateChanges().listen((user) {
-      App.currentUser.value = user;
-      RecipeRepository.setCurrentUser(user);
+      LoginInfo.instance.user = user;
+      RecipeRepository.user = user;
     });
   }
-
-  static final currentUser =
-      ValueNotifier<User?>(FirebaseAuth.instance.currentUser);
 
   @override
   State<App> createState() => _AppState();
@@ -57,13 +53,7 @@ class _AppState extends State<App> {
         builder: (context, state) => SignInScreen(
           showAuthActionSwitch: false,
           breakpoint: 600,
-          providers: [
-            GoogleProvider(
-              clientId: _googleClientIdFrom(
-                DefaultFirebaseOptions.currentPlatform,
-              ),
-            ),
-          ],
+          providers: LoginInfo.authProviders,
         ),
       ),
     ],
@@ -77,17 +67,8 @@ class _AppState extends State<App> {
       if (loggedIn && loggingIn) return homeLocation;
       return null;
     },
-    refreshListenable: App.currentUser,
+    refreshListenable: LoginInfo.instance,
   );
-
-  // inspired by https://github.com/firebase/FirebaseUI-Flutter/blob/main/packages/firebase_ui_auth/example/lib/config.dart
-  static String _googleClientIdFrom(FirebaseOptions options) =>
-      switch (currentUniversalPlatform) {
-        UniversalPlatformType.MacOS ||
-        UniversalPlatformType.IOS =>
-          options.iosClientId!,
-        _ => options.androidClientId!,
-      };
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(

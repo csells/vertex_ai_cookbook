@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "770573990412",
+    "project_id": "vertex-ai-cookbook",
+    "storage_bucket": "vertex-ai-cookbook.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770573990412:android:b32ae98a0a72e067de8c29",
+        "android_client_info": {
+          "package_name": "com.example.vertex_ai_cookbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770573990412-kd433iv3kss3eiu5uehqr0rln6uo990u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAVioS_qnV72v-grIOz6XVjugqMsLmvG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770573990412-0hvpdpjb21casab7rujrpavbrartmuqk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "770573990412-443pjc1aik8m5khd4ja07ujhhlpobduu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vertexAiCookbook"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

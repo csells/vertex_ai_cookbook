@@ -330,7 +330,7 @@ packages:
     source: hosted
     version: "1.13.0"
   firebase_ui_oauth:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_ui_oauth
       sha256: "26fc29107b5ec0c8b1e8a9eb2234f544a5340e87ca4a9741ba2d5ecec0c39e10"
