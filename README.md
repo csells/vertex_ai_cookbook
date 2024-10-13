@@ -68,7 +68,8 @@ https://firebase.google.com/docs/firestore/quickstart#dart_3
 TODO: README/create-firestore-default-database.png
 
 # Auth
-TODO
+TODO: https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-auth/providers/oauth.md#google-sign-in
+
 as per: https://firebase.google.com/docs/rules/basics#cloud-firestore_2
 rules_version = '2';
 service cloud.firestore {

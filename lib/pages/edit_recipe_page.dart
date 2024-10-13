@@ -132,8 +132,8 @@ Generate a response in JSON format with the following schema:
                         child: const Text('Magic'),
                       ),
                       OutlinedButton(
-                        onPressed: () async => await _onDone(),
-                        child: const Text('Done'),
+                        onPressed: () async => await _onSave(),
+                        child: const Text('Save'),
                       ),
                     ],
                   ),
@@ -144,7 +144,7 @@ Generate a response in JSON format with the following schema:
         ),
       );
 
-  Future<void> _onDone() async {
+  Future<void> _onSave() async {
     if (!_formKey.currentState!.validate()) return;
 
     final recipe = Recipe(
