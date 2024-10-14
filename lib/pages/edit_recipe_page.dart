@@ -29,7 +29,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
 
   final _provider = VertexProvider(
     chatModel: FirebaseVertexAI.instance.generativeModel(
-      model: "gemini-1.5-flash",
+      model: 'gemini-1.5-flash',
       generationConfig: GenerationConfig(responseMimeType: 'application/json'),
       systemInstruction: Content.system(
         '''
@@ -76,7 +76,7 @@ Generate a response in JSON format with the following schema:
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text('${_isNewRecipe ? "Add" : "Edit"} Recipe'),
+          title: Text('${_isNewRecipe ? 'Add' : 'Edit'} Recipe'),
         ),
         body: FutureBuilderEx<Recipe>(
           future: _recipeFuture,

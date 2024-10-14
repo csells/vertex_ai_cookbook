@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage>
 
   final _provider = VertexProvider(
     chatModel: FirebaseVertexAI.instance.generativeModel(
-      model: "gemini-1.5-flash",
+      model: 'gemini-1.5-flash',
       generationConfig: GenerationConfig(responseMimeType: 'application/json'),
       systemInstruction: Content.system(
         '''
