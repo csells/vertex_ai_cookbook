@@ -196,9 +196,7 @@ Once you have your Firebase project in place, you'll need to [configure Firebase
 
 ## Cloud Firestore
 
-And finally, you'll need to create a Cloud Firestore database to store your users' recipes. The [Create a Cloud Firestore database docs](https://firebase.google.com/docs/firestore/quickstart#create) will show you how to do that.
-
-TODO: README/create-firestore-default-database.png ??
+And finally, you'll need to create the default Cloud Firestore database to store your users' recipes. The [Create a Cloud Firestore database docs](https://firebase.google.com/docs/firestore/quickstart#create) will show you how to do that.
 
 Once you have your database created, you can secure it according to [the Firebase Security Rules docs for Content-owner only access](https://firebase.google.com/docs/rules/basics#content-owner_only_access) using rules like these:
 
