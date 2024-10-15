@@ -14,7 +14,7 @@ This sample relies on a Firebase project, which you then initialize in your app.
 
 ## Firebase Auth
 
-Once you have your Firebase project in place, you'll need to [configure Firebase Auth with support for Google Sign-In](https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-auth/providers/oauth.md#google-sign-in) to enable your users to create new accounts and store their recipes.
+Once you have your Firebase project in place, you'll need to [configure Firebase Auth with support for Google Sign-In](https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-auth/providers/oauth.md#google-sign-in) to enable your users to create new accounts and store their recipes. In addition, you'll want to pay attention to the setup instructions described in [the `google_sign_in` package](https://pub.dev/packages/google_sign_in).
 
 As part of the configuration of the app, you may have noticed that there's a file missing from the the repository: `google_client_id.dart`. It's referenced from `lib/login_info.dart` and is required to provide the client ID to enable Google social sign in, which is why it isn't checked into the repo.
 
