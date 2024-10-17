@@ -20,42 +20,50 @@ class RecipeResponseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final map = jsonDecode(response);
-    final recipesWithText = map['recipes'] as List<dynamic>;
-    final finalText = map['text'] as String;
     final children = <Widget>[];
 
-    for (final recipeWithText in recipesWithText) {
-      // extract the text before the recipe
-      final text = recipeWithText['text'] as String;
-      if (text.isNotEmpty) children.add(MarkdownBody(data: text));
+    try {
+      final map = jsonDecode(response);
+      final recipesWithText = map['recipes'] as List<dynamic>;
+      final finalText = map['text'] as String;
 
-      // extract the recipe
-      final json = recipeWithText['recipe'] as Map<String, dynamic>;
-      final recipe = Recipe.fromJson(json);
-      children.add(const Gap(16));
-      children.add(Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(recipe.title, style: Theme.of(context).textTheme.titleLarge),
-          Text(recipe.description),
-          RecipeContentView(recipe: recipe),
-        ],
-      ));
+      for (final recipeWithText in recipesWithText) {
+        // extract the text before the recipe
+        final text = recipeWithText['text'] as String;
+        if (text.isNotEmpty) children.add(MarkdownBody(data: text));
 
-      // add a button to add the recipe to the list
-      children.add(const Gap(16));
-      children.add(OutlinedButton(
-        onPressed: () => repository.addNewRecipe(recipe),
-        child: const Text('Add Recipe'),
+        // extract the recipe
+        final json = recipeWithText['recipe'] as Map<String, dynamic>;
+        final recipe = Recipe.fromJson(json);
+        children.add(const Gap(16));
+        children.add(Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(recipe.title, style: Theme.of(context).textTheme.titleLarge),
+            Text(recipe.description),
+            RecipeContentView(recipe: recipe),
+          ],
+        ));
+
+        // add a button to add the recipe to the list
+        children.add(const Gap(16));
+        children.add(OutlinedButton(
+          onPressed: () => repository.addNewRecipe(recipe),
+          child: const Text('Add Recipe'),
+        ));
+        children.add(const Gap(16));
+      }
+
+      // add the remaining text
+      if (finalText.isNotEmpty) children.add(MarkdownBody(data: finalText));
+    } catch (e) {
+      children.add(Text(
+        'You\'ve run into a known, temporary issue that will be fixed ASAP.\n\n'
+        'Details @ https://github.com/csells/vertex_ai_cookbook/issues/3\n\n'
+        'Error: $e',
       ));
-      children.add(const Gap(16));
     }
 
-    // add the remaining text
-    if (finalText.isNotEmpty) children.add(MarkdownBody(data: finalText));
-
-    // return the children as rows in a column
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
