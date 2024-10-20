@@ -26,7 +26,7 @@ import 'package:flutter/foundation.dart';
 import 'firebase_options.dart';
 
 const webClientId = 'YOUR-WEB-CLIENT-ID.apps.googleusercontent.com';
-const iOSClientId = DefaultFirebaseOptions.currentPlatform.iosClientId!;
+final iOSClientId = DefaultFirebaseOptions.currentPlatform.iosClientId!;
 
 String get googleClientId => kIsWeb
     ? webClientId
