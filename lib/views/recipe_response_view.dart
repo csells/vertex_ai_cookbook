@@ -57,11 +57,7 @@ class RecipeResponseView extends StatelessWidget {
       // add the remaining text
       if (finalText.isNotEmpty) children.add(MarkdownBody(data: finalText));
     } catch (e) {
-      children.add(Text(
-        'You\'ve run into a known, temporary issue that will be fixed ASAP.\n\n'
-        'Details @ https://github.com/csells/vertex_ai_cookbook/issues/3\n\n'
-        'Error: $e',
-      ));
+      children.add(Text('Error: $e'));
     }
 
     return Column(

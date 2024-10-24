@@ -88,7 +88,7 @@ The Chat section of the app is tuned to be a recipe generating machine, as you c
   final _provider = VertexProvider(
     chatModel: FirebaseVertexAI.instance.generativeModel(
       model: "gemini-1.5-flash",
-      generationConfig: GenerationConfig(responseMimeType: 'application/json'),
+      generationConfig: GenerationConfig(responseMimeType: 'application/json', responseSchema: Schema(...)),
       systemInstruction: Content.system('''
 You are a helpful assistant that generates recipes based on the ingredients and 
 instructions provided as well as my food preferences, which are as follows:
@@ -151,7 +151,7 @@ Looking again at the system instructions we provide the LLM, you'll see a spot f
   final _provider = VertexProvider(
     chatModel: FirebaseVertexAI.instance.generativeModel(
       model: "gemini-1.5-flash",
-      generationConfig: GenerationConfig(responseMimeType: 'application/json'),
+      generationConfig: GenerationConfig(responseMimeType: 'application/json', responseSchema: Schema(...)),
       systemInstruction: Content.system('''
 You are a helpful assistant that generates recipes based on the ingredients and 
 instructions provided as well as my food preferences, which are as follows:
@@ -193,7 +193,7 @@ This button creates a Firebase AI Vertex model just like the one used to initial
   final _provider = VertexProvider(
     chatModel: FirebaseVertexAI.instance.generativeModel(
       model: 'gemini-1.5-flash',
-      generationConfig: GenerationConfig(responseMimeType: 'application/json'),
+      generationConfig: GenerationConfig(responseMimeType: 'application/json', responseSchema: Schema(...)),
       systemInstruction: Content.system('''
 You are a helpful assistant that generates recipes based on the ingredients and 
 instructions provided as well as my food preferences, which are as follows:

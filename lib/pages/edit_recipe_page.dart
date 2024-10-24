@@ -28,9 +28,35 @@ class _EditRecipePageState extends State<EditRecipePage> {
   final _instructionsController = TextEditingController();
 
   final _provider = VertexProvider(
-    chatModel: FirebaseVertexAI.instance.generativeModel(
+    generativeModel: FirebaseVertexAI.instance.generativeModel(
       model: 'gemini-1.5-flash',
-      generationConfig: GenerationConfig(responseMimeType: 'application/json'),
+      generationConfig: GenerationConfig(
+        responseMimeType: 'application/json',
+        responseSchema: Schema(
+          SchemaType.object,
+          properties: {
+            'modifications': Schema(
+              description: 'The modifications to the recipe you made',
+              SchemaType.string,
+            ),
+            'recipe': Schema(
+              SchemaType.object,
+              properties: {
+                'title': Schema(SchemaType.string),
+                'description': Schema(SchemaType.string),
+                'ingredients': Schema(
+                  SchemaType.array,
+                  items: Schema(SchemaType.string),
+                ),
+                'instructions': Schema(
+                  SchemaType.array,
+                  items: Schema(SchemaType.string),
+                ),
+              },
+            ),
+          },
+        ),
+      ),
       systemInstruction: Content.system(
         '''
 You are a helpful assistant that generates recipes based on the ingredients and 
@@ -168,9 +194,9 @@ Generate a response in JSON format with the following schema:
       'Generate a modified version of this recipe based on my food preferences: '
       '${_ingredientsController.text}\n\n${_instructionsController.text}',
     );
-    var response = await stream.join();
 
     try {
+      final response = await stream.join();
       final json = jsonDecode(response);
       final modifications = json['modifications'];
       final recipe = Recipe.fromJson(json['recipe']);

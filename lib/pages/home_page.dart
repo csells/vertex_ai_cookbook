@@ -24,9 +24,43 @@ class _HomePageState extends State<HomePage>
   String _searchText = '';
 
   final _provider = VertexProvider(
-    chatModel: FirebaseVertexAI.instance.generativeModel(
+    generativeModel: FirebaseVertexAI.instance.generativeModel(
       model: 'gemini-1.5-flash',
-      generationConfig: GenerationConfig(responseMimeType: 'application/json'),
+      generationConfig: GenerationConfig(
+        responseMimeType: 'application/json',
+        responseSchema: Schema(
+          SchemaType.object,
+          properties: {
+            'recipes': Schema(
+              SchemaType.array,
+              items: Schema(
+                SchemaType.object,
+                properties: {
+                  'text': Schema(
+                    SchemaType.string,
+                  ),
+                  'recipe': Schema(
+                    SchemaType.object,
+                    properties: {
+                      'title': Schema(SchemaType.string),
+                      'description': Schema(SchemaType.string),
+                      'ingredients': Schema(
+                        SchemaType.array,
+                        items: Schema(SchemaType.string),
+                      ),
+                      'instructions': Schema(
+                        SchemaType.array,
+                        items: Schema(SchemaType.string),
+                      ),
+                    },
+                  ),
+                },
+              ),
+            ),
+            'text': Schema(SchemaType.string),
+          },
+        ),
+      ),
       systemInstruction: Content.system(
         '''
 You are a helpful assistant that generates recipes based on the ingredients and 
