@@ -1,9 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_oauth/firebase_ui_oauth.dart' as fuo;
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as fua;
 import 'package:flutter/foundation.dart';
-
-import 'google_client_id.dart'; // defines googleClientId property
 
 class LoginInfo extends ChangeNotifier {
   LoginInfo._() : _user = FirebaseAuth.instance.currentUser;
@@ -15,27 +12,16 @@ class LoginInfo extends ChangeNotifier {
     notifyListeners();
   }
 
-  static final _googleSignInProvider = GoogleProvider(
-    // as per:
-    // https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-auth/providers/oauth.md#google-sign-in
-    clientId: googleClientId,
-  );
-
-  static final List<fuo.OAuthProvider> authProviders = [
-    _googleSignInProvider,
+  static final List<fua.AuthProvider> authProviders = [
+    fua.EmailAuthProvider(),
   ];
 
   static final instance = LoginInfo._();
 
-  String? get displayName => user?.displayName;
+  String? get displayName => user?.displayName ?? user?.email;
 
   Future<void> logout() async {
     user = null;
     await FirebaseAuth.instance.signOut();
-
-    // on mobile, the Google sign-in provider must be disconnected separately to
-    // allow for a new account to be selected during login; otherwise the
-    // account selected first will be used for all logins, even between sessions
-    await _googleSignInProvider.provider.disconnect();
   }
 }

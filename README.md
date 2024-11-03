@@ -14,27 +14,7 @@ This sample relies on a Firebase project, which you then initialize in your app.
 
 ## Firebase Auth
 
-Once you have your Firebase project in place, you'll need to [configure Firebase Auth with support for Google Sign-In](https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-auth/providers/oauth.md#google-sign-in) to enable your users to create new accounts and store their recipes. In addition, you'll want to pay attention to the setup instructions described in [the `google_sign_in` package](https://pub.dev/packages/google_sign_in).
-
-As part of the configuration of the app, you may have noticed that there's a file missing from the the repository: `google_client_id.dart`. It's referenced from `lib/login_info.dart` and is required to provide the client ID to enable Google social sign in, which is why it isn't checked into the repo.
-
-In `google_client_id.dart`, you should place a property getting with the correct client IDs as per the docs to [configure Firebase Auth with support for Google Sign-In](https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-auth/providers/oauth.md#google-sign-in). The getter, called `googleClientId`, should look like this:
-
-```dart
-// google_client_id.dart
-import 'package:flutter/foundation.dart';
-import 'firebase_options.dart';
-
-const webClientId = 'YOUR-WEB-CLIENT-ID.apps.googleusercontent.com';
-final iOSClientId = DefaultFirebaseOptions.currentPlatform.iosClientId!;
-
-String get googleClientId => kIsWeb
-    ? webClientId
-    : switch (defaultTargetPlatform) {
-      TargetPlatform.iOS || TargetPlatform.macOS => iOSClientId,
-      _ => webClientId,
-    };
-```
+Once you have your Firebase project in place, you'll need to [configure Firebase Auth with support for the Email auth provider](https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-auth/providers/email.md) to enable your users to create new accounts and store their recipes. The project has all of the necessary code, so it's just a matter of enabling the "Email/Password" provider in the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
 ## Cloud Firestore
 

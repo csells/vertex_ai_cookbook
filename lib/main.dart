@@ -51,9 +51,10 @@ class _AppState extends State<App> {
         name: 'login',
         path: '/login',
         builder: (context, state) => SignInScreen(
-          showAuthActionSwitch: false,
+          showAuthActionSwitch: true,
           breakpoint: 600,
           providers: LoginInfo.authProviders,
+          showPasswordVisibilityToggle: true,
         ),
       ),
     ],
