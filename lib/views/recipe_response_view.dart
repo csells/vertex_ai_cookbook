@@ -1,3 +1,7 @@
+// json access
+// ignore_for_file: avoid_dynamic_calls
+
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -48,7 +52,7 @@ class RecipeResponseView extends StatelessWidget {
         // add a button to add the recipe to the list
         children.add(const Gap(16));
         children.add(OutlinedButton(
-          onPressed: () => repository.addNewRecipe(recipe),
+          onPressed: () => unawaited(repository.addNewRecipe(recipe)),
           child: const Text('Add Recipe'),
         ));
         children.add(const Gap(16));
@@ -56,7 +60,10 @@ class RecipeResponseView extends StatelessWidget {
 
       // add the remaining text
       if (finalText.isNotEmpty) children.add(MarkdownBody(data: finalText));
-    } catch (e) {
+    }
+    // want to catch everything
+    // ignore: avoid_catches_without_on_clauses
+    catch (e) {
       children.add(Text('Error: $e'));
     }
 

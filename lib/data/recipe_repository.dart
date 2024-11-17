@@ -44,6 +44,8 @@ class RecipeRepository extends ChangeNotifier {
     return _currentUserRepository!;
   }
 
+  static User? get user => _currentUser;
+
   static set user(User? user) {
     // clear the repository cache when the user is logged out
     if (user == null) {
@@ -73,7 +75,7 @@ class RecipeRepository extends ChangeNotifier {
           jsonList.map((json) => Recipe.fromJson(json)).toList();
 
       // Add default recipes to Firestore
-      for (var recipe in defaultRecipes) {
+      for (final recipe in defaultRecipes) {
         await collection.doc(recipe.id).set(recipe.toJson());
       }
 
@@ -83,8 +85,8 @@ class RecipeRepository extends ChangeNotifier {
     // If the collection exists and has documents, fetch all recipes
     final querySnapshot = await collection.get();
     final recipes = <Recipe>[];
-    for (var doc in querySnapshot.docs) {
-      recipes.add(Recipe.fromJson(doc.data() as Map<String, dynamic>));
+    for (final doc in querySnapshot.docs) {
+      recipes.add(Recipe.fromJson(doc.data()! as Map<String, dynamic>));
     }
 
     return recipes;

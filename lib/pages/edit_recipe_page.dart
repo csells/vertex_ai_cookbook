@@ -1,3 +1,7 @@
+// json access
+// ignore_for_file: avoid_dynamic_calls
+
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_vertexai/firebase_vertexai.dart';
@@ -61,7 +65,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
         '''
 You are a helpful assistant that generates recipes based on the ingredients and 
 instructions provided as well as my food preferences, which are as follows:
-${Settings.foodPreferences.isEmpty ? 'I don\'t have any food preferences' : Settings.foodPreferences}
+${Settings.foodPreferences.isEmpty ? "I don't have any food preferences" : Settings.foodPreferences}
 
 Generate a response in JSON format with the following schema:
 {
@@ -109,7 +113,7 @@ Generate a response in JSON format with the following schema:
           builder: (context, recipe) => Form(
             key: _formKey,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   TextFormField(
@@ -151,11 +155,11 @@ Generate a response in JSON format with the following schema:
                     spacing: 16,
                     children: [
                       ElevatedButton(
-                        onPressed: () async => await _onMagic(),
+                        onPressed: () async => _onMagic(),
                         child: const Text('Magic'),
                       ),
                       OutlinedButton(
-                        onPressed: () async => await _onSave(),
+                        onPressed: () async => _onSave(),
                         child: const Text('Save'),
                       ),
                     ],
@@ -180,18 +184,20 @@ Generate a response in JSON format with the following schema:
 
     final repository = await RecipeRepository.forCurrentUser;
     if (_isNewRecipe) {
-      repository.addNewRecipe(recipe);
+      unawaited(repository.addNewRecipe(recipe));
     } else {
-      repository.updateRecipe(recipe);
+      unawaited(repository.updateRecipe(recipe));
     }
 
+    // I'm checking if the context is still mounted, so...
     // ignore: use_build_context_synchronously
     if (context.mounted) context.goNamed('home');
   }
 
   Future<void> _onMagic() async {
     final stream = _provider.sendMessageStream(
-      'Generate a modified version of this recipe based on my food preferences: '
+      'Generate a modified version of this recipe based on my food '
+      'preferences: '
       '${_ingredientsController.text}\n\n${_instructionsController.text}',
     );
 
@@ -203,6 +209,7 @@ Generate a response in JSON format with the following schema:
 
       if (!context.mounted) return;
       final accept = await showDialog<bool>(
+        // I'm checking if the context is still mounted, so...
         // ignore: use_build_context_synchronously
         context: context,
         builder: (context) => AlertDialog(
@@ -236,7 +243,7 @@ Generate a response in JSON format with the following schema:
         ),
       );
 
-      if (accept == true) {
+      if (accept ?? false) {
         setState(() {
           _titleController.text = recipe.title;
           _descriptionController.text = recipe.description;
@@ -244,20 +251,26 @@ Generate a response in JSON format with the following schema:
           _instructionsController.text = recipe.instructions.join('\n');
         });
       }
-    } catch (ex) {
+    }
+    // want to catch everything
+    // ignore: avoid_catches_without_on_clauses
+    catch (ex) {
       if (context.mounted) {
-        showDialog(
-          // ignore: use_build_context_synchronously
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: Text(ex.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(),
-                child: const Text('OK'),
-              ),
-            ],
+        unawaited(
+          showDialog(
+            // I'm checking if the context is still mounted, so...
+            // ignore: use_build_context_synchronously
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Error'),
+              content: Text(ex.toString()),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
           ),
         );
       }

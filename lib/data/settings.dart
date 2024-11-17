@@ -8,7 +8,7 @@ class Settings {
   static Future<void> init() async {
     assert(_prefs == null, 'call Settings.init() exactly once');
     _prefs = await SharedPreferencesWithCache.create(
-      cacheOptions: SharedPreferencesWithCacheOptions(),
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
     );
   }
 

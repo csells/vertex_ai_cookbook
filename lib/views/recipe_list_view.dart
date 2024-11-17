@@ -7,9 +7,9 @@ import 'recipe_view.dart';
 
 class RecipeListView extends StatefulWidget {
   const RecipeListView({
-    super.key,
     required this.repository,
     required this.searchText,
+    super.key,
   });
 
   final RecipeRepository repository;
@@ -44,11 +44,11 @@ class _RecipeListViewState extends State<RecipeListView> {
               RecipeView(
                 key: ValueKey(recipe.id),
                 recipe: recipe,
-                expanded: _expanded[recipe.id] == true,
+                expanded: _expanded[recipe.id] ?? false,
                 onExpansionChanged: (expanded) =>
                     _onExpand(recipe.id, expanded),
                 onEdit: () => _onEdit(recipe),
-                onDelete: () async => await _onDelete(recipe),
+                onDelete: () async => _onDelete(recipe),
               ),
           ],
         ),
@@ -83,7 +83,7 @@ class _RecipeListViewState extends State<RecipeListView> {
       ),
     );
 
-    if (shouldDelete == true) {
+    if (shouldDelete ?? false) {
       await widget.repository.deleteRecipe(recipe);
     }
   }

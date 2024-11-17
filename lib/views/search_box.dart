@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SearchBox extends StatefulWidget {
+  const SearchBox({required this.onSearchChanged, super.key});
   final Function(String) onSearchChanged;
-
-  const SearchBox({super.key, required this.onSearchChanged});
 
   @override
   _SearchBoxState createState() => _SearchBoxState();
