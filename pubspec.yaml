@@ -7,7 +7,6 @@ environment:
   sdk: ^3.5.3
 
 dependencies:
-  all_lint_rules_community: ^0.0.42
   cloud_firestore: ^5.4.4
   cupertino_icons: ^1.0.8
   firebase_auth: ^5.3.1
@@ -24,6 +23,9 @@ dependencies:
   shared_preferences: ^2.3.2
   split_view: ^3.2.1
   uuid: ^4.5.1
+
+dev_dependencies:
+  all_lint_rules_community: ^0.0.42
 
 flutter:
   uses-material-design: true

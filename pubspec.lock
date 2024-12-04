@@ -10,7 +10,7 @@ packages:
     source: hosted
     version: "1.3.46"
   all_lint_rules_community:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: all_lint_rules_community
       sha256: "3ea86193349de9bafc8ea43710cc5cef399f8567d038ec1dbafc98e018bf2831"
